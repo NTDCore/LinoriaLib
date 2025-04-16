@@ -14,6 +14,8 @@ local DrawingLib = typeof(Drawing) == "table" and Drawing or { drawing_replaced 
 local ProtectGui = protectgui or (function() end);
 local GetHUI = gethui or (function() return CoreGui end);
 
+local IsBadDrawingLib = false;
+
 local ScreenGui = Instance.new('ScreenGui');
 pcall(ProtectGui, ScreenGui);
 
@@ -779,11 +781,7 @@ Library:GiveSignal(ScreenGui.DescendantRemoving:Connect(function(Instance)
 end))
 
 local function Trim(Text: string)
-    if Text == nil then
-        return "";
-    end
-
-    return tostring(Text):match("^%s*(.-)%s*$")
+    return Text:match("^%s*(.-)%s*$")
 end
 
 local BaseAddons = {};
@@ -1248,14 +1246,14 @@ do
             HueBox.Text = '#' .. ColorPicker.Value:ToHex()
             RgbBox.Text = table.concat({ math.floor(ColorPicker.Value.R * 255), math.floor(ColorPicker.Value.G * 255), math.floor(ColorPicker.Value.B * 255) }, ', ')
 
-            Library:SafeCallback(ColorPicker.Callback, ColorPicker.Value);
-            Library:SafeCallback(ColorPicker.Changed, ColorPicker.Value);
+            Library:SafeCallback(ColorPicker.Callback, ColorPicker.Value, ColorPicker.Transparency);
+            Library:SafeCallback(ColorPicker.Changed, ColorPicker.Value, ColorPicker.Transparency);
         end;
 
         function ColorPicker:OnChanged(Func)
             ColorPicker.Changed = Func;
             
-            Library:SafeCallback(Func, ColorPicker.Value);
+            Library:SafeCallback(Func, ColorPicker.Value, ColorPicker.Transparency);
         end;
 
         if ParentObj.Addons then
@@ -1563,7 +1561,7 @@ do
                 KeybindsToggleInner.BackgroundColor3 = State and Library.AccentColor or Library.MainColor;
                 KeybindsToggleInner.BorderColor3 = State and Library.AccentColorDark or Library.OutlineColor;
                 KeybindsToggleLabel.TextColor3 = State and Library.AccentColor or Library.FontColor;
-                
+
                 Library.RegistryMap[KeybindsToggleInner].Properties.BackgroundColor3 = State and 'AccentColor' or 'MainColor';
                 Library.RegistryMap[KeybindsToggleInner].Properties.BorderColor3 = State and 'AccentColorDark' or 'OutlineColor';
                 Library.RegistryMap[KeybindsToggleLabel].Properties.TextColor3 = State and 'AccentColor' or 'FontColor';
@@ -2209,7 +2207,6 @@ do
                                 Selected = Try;
 
                                 if Selected then
-                                    warn(Value, StringValue, typeof(Value), typeof(StringValue))
                                     Dropdown.Value[Value] = true;
                                 else
                                     Dropdown.Value[Value] = nil;
@@ -4066,7 +4063,6 @@ do
                                 Selected = Try;
 
                                 if Selected then
-                                    warn(Value, StringValue, typeof(Value), typeof(StringValue))
                                     Dropdown.Value[Value] = true;
                                 else
                                     Dropdown.Value[Value] = nil;
@@ -4623,11 +4619,12 @@ function Library:Notify(...)
     local Info = select(1, ...)
 
     if typeof(Info) == "table" then
-        Data.Title = tostring(Info.Title)
+        Data.Title = Info.Title and tostring(Info.Title) or ""
         Data.Description = tostring(Info.Description)
         Data.Time = Info.Time or 5
         Data.SoundId = Info.SoundId
     else
+        Data.Title = ""
         Data.Description = tostring(Info)
         Data.Time = select(2, ...) or 5
         Data.SoundId = select(3, ...)
@@ -4690,7 +4687,7 @@ function Library:Notify(...)
         AnchorPoint = if Side == "left" then Vector2.new(0, 0) else Vector2.new(1, 0);
         Position = if Side == "left" then UDim2.new(0, 4, 0, 0) else UDim2.new(1, -4, 0, 0);
         Size = UDim2.new(1, -4, 1, 0);
-        Text = (if Trim(Data["Title"]) == "" then "" else "[" .. tostring(Data.Title) .. "] ") .. tostring(Data.Description);
+        Text = (if Data.Title == "" then "" else "[" .. Data.Title .. "] ") .. tostring(Data.Description);
         TextXAlignment = if Side == "left" then Enum.TextXAlignment.Left else Enum.TextXAlignment.Right;
         TextSize = 14;
         ZIndex = 103;
@@ -4719,7 +4716,7 @@ function Library:Notify(...)
         NewText = if NewText == nil then "" else tostring(NewText);
 
         Data.Title = NewText;
-        NotifyLabel.Text = (if Trim(Data["Title"]) == "" then "" else "[" .. tostring(Data.Title) .. "] ") .. tostring(Data.Description);
+        NotifyLabel.Text = (if Data.Title == "" then "" else "[" .. Data.Title .. "] ") .. tostring(Data.Description);
 
         Data:Resize();
     end
@@ -4729,7 +4726,7 @@ function Library:Notify(...)
         NewText = tostring(NewText);
 
         Data.Description = NewText;
-        NotifyLabel.Text = (if Trim(Data["Title"]) == "" then "" else "[" .. tostring(Data.Title) .. "] ") .. tostring(Data.Description);
+        NotifyLabel.Text = (if Data.Title == "" then "" else "[" .. Data.Title .. "] ") .. tostring(Data.Description);
 
         Data:Resize();
     end
@@ -5012,6 +5009,8 @@ function Library:CreateWindow(...)
             Parent = TabContainer;
         });
 
+        local TopBarLabelStroke
+        local TopBarHighlight
         local TopBar, TopBarInner, TopBarLabel, TopBarTextLabel; do
             TopBar = Library:Create('Frame', {
                 BackgroundColor3 = Library.BackgroundColor;
@@ -5034,7 +5033,7 @@ function Library:CreateWindow(...)
                 Parent = TopBar;
             });
 
-            local TopBarHighlight = Library:Create('Frame', {
+            TopBarHighlight = Library:Create('Frame', {
                 BackgroundColor3 = Color3.fromRGB(255, 75, 75);
                 BorderSizePixel = 0;
                 Size = UDim2.new(1, 0, 0, 2);
@@ -5057,7 +5056,7 @@ function Library:CreateWindow(...)
                 Parent = TopBarInner;
             });
 
-            local TopBarLabelStroke = Library:ApplyTextStroke(TopBarLabel);
+            TopBarLabelStroke = Library:ApplyTextStroke(TopBarLabel);
             TopBarLabelStroke.Color = Color3.fromRGB(174, 3, 3);
 
             TopBarTextLabel = Library:CreateLabel({
@@ -5210,6 +5209,26 @@ function Library:CreateWindow(...)
 
                 Tab:Resize();
             end;
+
+            TopBar.BorderColor3 = Info.IsNormal == true and Color3.fromRGB(27, 42, 53) or Color3.fromRGB(248, 51, 51)
+            TopBarInner.BorderColor3 = Info.IsNormal == true and Library.OutlineColor or Color3.fromRGB(0, 0, 0)
+            TopBarInner.BackgroundColor3 = Info.IsNormal == true and Library.BackgroundColor or Color3.fromRGB(117, 22, 17)
+            TopBarHighlight.BackgroundColor3 = Info.IsNormal == true and Library.AccentColor or Color3.fromRGB(255, 75, 75)
+             
+            TopBarLabel.TextColor3 = Info.IsNormal == true and Library.FontColor or Color3.fromRGB(255, 55, 55)
+            TopBarLabelStroke.Color = Info.IsNormal == true and Library.Black or Color3.fromRGB(174, 3, 3)
+
+            if not Library.RegistryMap[TopBarInner] then Library:AddToRegistry(TopBarInner, {}) end
+            if not Library.RegistryMap[TopBarHighlight] then Library:AddToRegistry(TopBarHighlight, {}) end
+            if not Library.RegistryMap[TopBarLabel] then Library:AddToRegistry(TopBarLabel, {}) end
+            if not Library.RegistryMap[TopBarLabelStroke] then Library:AddToRegistry(TopBarLabelStroke, {}) end
+
+            Library.RegistryMap[TopBarInner].Properties.BorderColor3 = Info.IsNormal == true and "OutlineColor" or nil;
+            Library.RegistryMap[TopBarInner].Properties.BackgroundColor3 = Info.IsNormal == true and "BackgroundColor" or nil;
+            Library.RegistryMap[TopBarHighlight].Properties.BackgroundColor3 = Info.IsNormal == true and "AccentColor" or nil;
+
+            Library.RegistryMap[TopBarLabel].Properties.TextColor3 = Info.IsNormal == true and "FontColor" or nil;
+            Library.RegistryMap[TopBarLabelStroke].Properties.Color = Info.IsNormal == true and "Black" or nil;
         end;
 
         function Tab:ShowTab()
@@ -5598,41 +5617,43 @@ function Library:CreateWindow(...)
             -- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
             Outer.Visible = true;
 
-            if DrawingLib.drawing_replaced ~= true then
-                local Cursor = DrawingLib.new("Triangle")
-                Cursor.Thickness = 1
-                Cursor.Filled = true
-                Cursor.Visible = Library.ShowCustomCursor
-
-                local CursorOutline = DrawingLib.new("Triangle")
-                CursorOutline.Thickness = 1
-                CursorOutline.Filled = false
-                CursorOutline.Color = Color3.new(0, 0, 0)
-                CursorOutline.Visible = Library.ShowCustomCursor
-                
-                local OldMouseIconState = InputService.MouseIconEnabled
-                pcall(function() RunService:UnbindFromRenderStep("LinoriaCursor") end)
-                RunService:BindToRenderStep("LinoriaCursor", Enum.RenderPriority.Camera.Value - 1, function()
-                    InputService.MouseIconEnabled = not Library.ShowCustomCursor
-                    local mPos = InputService:GetMouseLocation()
-                    local X, Y = mPos.X, mPos.Y
-                    Cursor.Color = Library.AccentColor
-                    Cursor.PointA = Vector2.new(X, Y)
-                    Cursor.PointB = Vector2.new(X + 16, Y + 6)
-                    Cursor.PointC = Vector2.new(X + 6, Y + 16)
+            if DrawingLib.drawing_replaced ~= true and IsBadDrawingLib ~= true then
+                IsBadDrawingLib = not (pcall(function()
+                    local Cursor = DrawingLib.new("Triangle")
+                    Cursor.Thickness = 1
+                    Cursor.Filled = true
                     Cursor.Visible = Library.ShowCustomCursor
-                    CursorOutline.PointA = Cursor.PointA
-                    CursorOutline.PointB = Cursor.PointB
-                    CursorOutline.PointC = Cursor.PointC
-                    CursorOutline.Visible = Library.ShowCustomCursor
 
-                    if not Toggled or (not ScreenGui or not ScreenGui.Parent) then
-                        InputService.MouseIconEnabled = OldMouseIconState
-                        if Cursor then Cursor:Destroy() end
-                        if CursorOutline then CursorOutline:Destroy() end
-                        RunService:UnbindFromRenderStep("LinoriaCursor")
-                    end
-                end)
+                    local CursorOutline = DrawingLib.new("Triangle")
+                    CursorOutline.Thickness = 1
+                    CursorOutline.Filled = false
+                    CursorOutline.Color = Color3.new(0, 0, 0)
+                    CursorOutline.Visible = Library.ShowCustomCursor
+                    
+                    local OldMouseIconState = InputService.MouseIconEnabled
+                    pcall(function() RunService:UnbindFromRenderStep("LinoriaCursor") end)
+                    RunService:BindToRenderStep("LinoriaCursor", Enum.RenderPriority.Camera.Value - 1, function()
+                        InputService.MouseIconEnabled = not Library.ShowCustomCursor
+                        local mPos = InputService:GetMouseLocation()
+                        local X, Y = mPos.X, mPos.Y
+                        Cursor.Color = Library.AccentColor
+                        Cursor.PointA = Vector2.new(X, Y)
+                        Cursor.PointB = Vector2.new(X + 16, Y + 6)
+                        Cursor.PointC = Vector2.new(X + 6, Y + 16)
+                        Cursor.Visible = Library.ShowCustomCursor
+                        CursorOutline.PointA = Cursor.PointA
+                        CursorOutline.PointB = Cursor.PointB
+                        CursorOutline.PointC = Cursor.PointC
+                        CursorOutline.Visible = Library.ShowCustomCursor
+
+                        if not Toggled or (not ScreenGui or not ScreenGui.Parent) then
+                            InputService.MouseIconEnabled = OldMouseIconState
+                            if Cursor then Cursor:Destroy() end
+                            if CursorOutline then CursorOutline:Destroy() end
+                            RunService:UnbindFromRenderStep("LinoriaCursor")
+                        end
+                    end)
+                end));
             end
         end;
 
