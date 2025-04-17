@@ -3141,6 +3141,7 @@ do
             Value = Info.Default or false;
             Type = 'Toggle';
             Visible = if typeof(Info.Visible) == "boolean" then Info.Visible else true;
+            Connections = {};
             Disabled = if typeof(Info.Disabled) == "boolean" then Info.Disabled else false;
             Risky = if typeof(Info.Risky) == "boolean" then Info.Risky else false;
             OriginalText = Info.Text; Text = Info.Text;
