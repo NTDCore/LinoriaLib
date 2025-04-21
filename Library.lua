@@ -5871,8 +5871,8 @@ function Library:CreateWindow(...)
 end;
 
 local function OnPlayerChange()
-    local PlayerList, ExcludedPlayerList = GetPlayers(false, false), GetPlayers(true, false);
-    local StringPlayerList, StringExcludedPlayerList = GetPlayers(false, true), GetPlayers(true, true);
+    local PlayerList, ExcludedPlayerList = GetPlayers(false, true), GetPlayers(true, true);
+    local StringPlayerList, StringExcludedPlayerList = GetPlayers(false, false), GetPlayers(true, false);
 
     for _, Value in next, Options do
         if Value.SetValues and Value.Type == 'Dropdown' and Value.SpecialType == 'Player' then
@@ -5903,5 +5903,5 @@ Library:GiveSignal(Players.PlayerRemoving:Connect(OnPlayerChange));
 Library:GiveSignal(Teams.ChildAdded:Connect(OnTeamChange));
 Library:GiveSignal(Teams.ChildRemoved:Connect(OnTeamChange));
 
-getgenv().Library = Library
+if getgenv().skip_getgenv_linoria ~= true then getgenv().Library = Library end
 return Library
