@@ -103,21 +103,25 @@ LeftGroupBox:AddToggle('MyToggle', {
 	end
 })
 
-local ToggleWithSignal = LeftGroupBox:AddToggle('MyToggleWithSignal', {
+local ToggleWithSignal
+
+ToggleWithSignal = LeftGroupBox:AddToggle('MyToggleWithSignal', {
 	Text = 'This is a toggle with Signal',
 	Tooltip = 'This is a tooltip', -- Information shown when you hover over the toggle
 	DisabledTooltip = 'I am disabled!', -- Information shown when you hover over the toggle while it's disabled
 
-	Default = true, -- Default value (true / false)
+	Default = false, -- Default value (true / false)
 	Disabled = false, -- Will disable the toggle (true / false)
 	Visible = true, -- Will make the toggle invisible (true / false)
 	Risky = false, -- Makes the text red (the color can be changed using Library.RiskColor) (Default value = false)
 
 	Callback = function(Value)
 		if Value then
-			ToggleWithSignal:GiveSignal(cloneref(game:GetService('Players').PlayerAdded:Connect(function(player)
-				Linoria:Notify(player.Name.. 'has joined the game.')
-			end)))
+			ToggleWithSignal:GiveSignal(cloneref(game:GetService('Players')).LocalPlayer.CharacterAdded:Connect(function()
+				print('hiiiiiiiiiiiiiiiiiiiiii')
+			end))
+		else
+			table.foreach(ToggleWithSignal.Signals, print)
 		end
 	end
 })
