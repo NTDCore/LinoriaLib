@@ -17,28 +17,28 @@ local GetHUI = gethui or (function() return CoreGui end);
 local IsBadDrawingLib = false;
 
 local function SafeParentUI(Instance: Instance, Parent: Instance | () -> Instance)
-    if not pcall(function()
-        local DestinationParent
-        if typeof(Parent) == "function" then
-            DestinationParent = Parent()
-        else
-            DestinationParent = Parent
-        end
+	if not pcall(function()
+		local DestinationParent
+		if typeof(Parent) == "function" then
+			DestinationParent = Parent()
+		else
+			DestinationParent = Parent
+		end
 
-        Instance.Parent = DestinationParent
-    end) then
-        Instance.Parent = LocalPlayer:WaitForChild("PlayerGui", math.huge)
-    end
+		Instance.Parent = DestinationParent
+	end) then
+		Instance.Parent = LocalPlayer:WaitForChild("PlayerGui", math.huge)
+	end
 end
 
 local function ParentUI(UI: Instance, SkipHiddenUI: boolean?)
-    if SkipHiddenUI then
-        SafeParentUI(UI, CoreGui)
-        return
-    end
+	if SkipHiddenUI then
+		SafeParentUI(UI, CoreGui)
+		return
+	end
 
-    pcall(ProtectGui, UI)
-    SafeParentUI(UI, GetHUI)
+	pcall(ProtectGui, UI)
+	SafeParentUI(UI, GetHUI)
 end
 
 local ScreenGui = Instance.new('ScreenGui');
@@ -831,8 +831,8 @@ function Library:Unload()
 		end
 	end
 
-    getgenv().Linoria = nil
-    ScreenGui:Destroy()
+	getgenv().Linoria = nil
+	ScreenGui:Destroy()
 end
 
 function Library:OnUnload(Callback)
@@ -5661,18 +5661,18 @@ function Library:CreateWindow(...)
 			Tab:ShowTab();
 		end;
 
-        Window.Tabs[Name] = Tab;
-        return Tab;
-    end;
+		Window.Tabs[Name] = Tab;
+		return Tab;
+	end;
 
-    local ModalElement = Library:Create('TextButton', {
-        BackgroundTransparency = 1;
-        Size = UDim2.new(0, 0, 0, 0);
-        Visible = true;
-        Text = '';
-        Modal = false;
-        Parent = ScreenGui;
-    });
+	local ModalElement = Library:Create('TextButton', {
+		BackgroundTransparency = 1;
+		Size = UDim2.new(0, 0, 0, 0);
+		Visible = true;
+		Text = '';
+		Modal = false;
+		Parent = ScreenGui;
+	});
 
 	local TransparencyCache = {};
 	local Toggled = false;
@@ -5682,11 +5682,11 @@ function Library:CreateWindow(...)
 		if typeof(Toggling) == "boolean" and Toggling == Toggled then return end;
 		if Fading then return end;
 
-        local FadeTime = Config.MenuFadeTime;
-        Fading = true;
-        Toggled = (not Toggled);
-        Library.Toggled = Toggled;
-        ModalElement.Modal = Toggled;
+		local FadeTime = Config.MenuFadeTime;
+		Fading = true;
+		Toggled = (not Toggled);
+		Library.Toggled = Toggled;
+		ModalElement.Modal = Toggled;
 
 		if Toggled then
 			-- A bit scuffed, but if we're going from not toggled -> toggled we want to show the frame immediately so that the fade is visible.
