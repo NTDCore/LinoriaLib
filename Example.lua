@@ -1,7 +1,7 @@
 -- New example script written by wally
 -- You can suggest changes with a pull request or something
 
-local repo = 'https://raw.githubusercontent.com/mstudio45/LinoriaLib/main/'
+local repo = 'https://raw.githubusercontent.com/NTDCore/LinoriaLib/main/'
 
 local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
 local ThemeManager = loadstring(game:HttpGet(repo .. 'addons/ThemeManager.lua'))()
@@ -11,7 +11,7 @@ local Toggles = Library.Toggles
 
 Library.ShowToggleFrameInKeybinds = true -- Make toggle keybinds work inside the keybinds UI (aka adds a toggle to the UI). Good for mobile users (Default value = true)
 Library.ShowCustomCursor = true -- Toggles the Linoria cursor globaly (Default value = true)
-Library.NotifySide = "Left" -- Changes the side of the notifications globaly (Left, Right) (Default value = Left)
+Library.NotifySide = 'Left' -- Changes the side of the notifications globaly (Left, Right) (Default value = Left)
 
 local Window = Library:CreateWindow({
 	-- Set Center to true if you want the menu to appear in the center
@@ -27,7 +27,7 @@ local Window = Library:CreateWindow({
 	AutoShow = true,
 	Resizable = true,
 	ShowCustomCursor = true,
-	NotifySide = "Left",
+	NotifySide = 'Left',
 	TabPadding = 8,
 	MenuFadeTime = 0.2
 })
@@ -103,6 +103,24 @@ LeftGroupBox:AddToggle('MyToggle', {
 	end
 })
 
+local ToggleWithSignal = LeftGroupBox:AddToggle('MyToggleWithSignal', {
+	Text = 'This is a toggle with Signal',
+	Tooltip = 'This is a tooltip', -- Information shown when you hover over the toggle
+	DisabledTooltip = 'I am disabled!', -- Information shown when you hover over the toggle while it's disabled
+
+	Default = true, -- Default value (true / false)
+	Disabled = false, -- Will disable the toggle (true / false)
+	Visible = true, -- Will make the toggle invisible (true / false)
+	Risky = false, -- Makes the text red (the color can be changed using Library.RiskColor) (Default value = false)
+
+	Callback = function(Value)
+		if Value then
+			ToggleWithSignal:GiveSignal(cloneref(game:GetService('Players').PlayerAdded:Connect(function(player)
+				Linoria:Notify(player.Name.. 'has joined the game.')
+			end)))
+		end
+	end
+})
 
 -- Fetching a toggle object for later use:
 -- Toggles.MyToggle.Value
@@ -117,7 +135,7 @@ Toggles.MyToggle:OnChanged(function()
 	print('MyToggle changed to:', Toggles.MyToggle.Value)
 end)
 
--- This should print to the console: "My toggle state changed! New value: false"
+-- This should print to the console: 'My toggle state changed! New value: false'
 Toggles.MyToggle:SetValue(false)
 
 -- 1/15/23
@@ -140,7 +158,7 @@ local MyButton = LeftGroupBox:AddButton({
 	Text = 'Button',
 	Func = function()
 		print('You clicked a button!')
-		Library:Notify("This is a notification")
+		Library:Notify('This is a notification')
 	end,
 	DoubleClick = false,
 
@@ -155,7 +173,7 @@ local MyButton2 = MyButton:AddButton({
 	Text = 'Sub button',
 	Func = function()
 		print('You clicked a sub button!')
-		Library:Notify("This is a notification with sound", nil, 4590657391)
+		Library:Notify('This is a notification with sound', nil, 4590657391)
 	end,
 	DoubleClick = true, -- You will have to click this button twice to trigger the callback
 	Tooltip = 'This is the sub button (double click me!)'
@@ -202,8 +220,8 @@ LeftGroupBox:AddLabel('SecondTestLabel', {
 -- You index Library.Labels with the specified index, in this case it is 'SecondTestLabel' & 'TestLabel'
 -- To set the text of the label you do label:SetText
 
--- Library.Labels.TestLabel:SetText("first changed!")
--- Library.Labels.SecondTestLabel:SetText("second changed!")
+-- Library.Labels.TestLabel:SetText('first changed!')
+-- Library.Labels.SecondTestLabel:SetText('second changed!')
 
 
 -- Groupbox:AddDivider
@@ -262,7 +280,7 @@ Options.MySlider:OnChanged(function()
 	print('MySlider was changed! New value:', Options.MySlider.Value)
 end)
 
--- This should print to the console: "MySlider was changed! New value: 3"
+-- This should print to the console: 'MySlider was changed! New value: 3'
 Options.MySlider:SetValue(3)
 
 -- Groupbox:AddInput
@@ -366,7 +384,7 @@ DropdownGroupBox:AddDropdown('MyDisplayFormattedDropdown', {
 
 -- Multi dropdowns
 DropdownGroupBox:AddDropdown('MyMultiDropdown', {
-	-- Default is the numeric index (e.g. "This" would be 1 since it if first in the values list)
+	-- Default is the numeric index (e.g. 'This' would be 1 since it if first in the values list)
 	-- Default also accepts a string as well
 
 	-- Currently you can not set multiple values with a dropdown
@@ -649,11 +667,11 @@ end)
 -- UI Settings
 local MenuGroup = Tabs['UI Settings']:AddLeftGroupbox('Menu')
 
-MenuGroup:AddToggle("KeybindMenuOpen", { Default = Library.KeybindFrame.Visible, Text = "Open Keybind Menu", Callback = function(value) Library.KeybindFrame.Visible = value end})
-MenuGroup:AddToggle("ShowCustomCursor", {Text = "Custom Cursor", Default = true, Callback = function(Value) Library.ShowCustomCursor = Value end})
+MenuGroup:AddToggle('KeybindMenuOpen', { Default = Library.KeybindFrame.Visible, Text = 'Open Keybind Menu', Callback = function(value) Library.KeybindFrame.Visible = value end})
+MenuGroup:AddToggle('ShowCustomCursor', {Text = 'Custom Cursor', Default = true, Callback = function(Value) Library.ShowCustomCursor = Value end})
 MenuGroup:AddDivider()
-MenuGroup:AddLabel("Menu bind"):AddKeyPicker("MenuKeybind", { Default = "RightShift", NoUI = true, Text = "Menu keybind" })
-MenuGroup:AddButton("Unload", function() Library:Unload() end)
+MenuGroup:AddLabel('Menu bind'):AddKeyPicker('MenuKeybind', { Default = 'RightShift', NoUI = true, Text = 'Menu keybind' })
+MenuGroup:AddButton('Unload', function() Library:Unload() end)
 
 Library.ToggleKeybind = Options.MenuKeybind -- Allows you to have a custom keybind for the menu
 

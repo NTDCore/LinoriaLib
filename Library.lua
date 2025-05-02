@@ -787,6 +787,13 @@ function Library:Unload()
 		Library:SafeCallback(UnloadCallback)
 	end
 
+	-- Disconnects the toggles signal
+	for _, v in Toggles do
+		if v.Value then
+			v:SetValue(not v.Value)
+		end
+	end
+
 	getgenv().Linoria = nil
 	ScreenGui:Destroy()
 end
