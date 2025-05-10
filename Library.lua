@@ -46,7 +46,7 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.DisplayOrder = 999;
 ScreenGui.ResetOnSpawn = false;
 if identifyexecutor() == 'Volcano' then
-	ScreenGui.Parent = lplr.PlayerGui;
+	ScreenGui.Parent = LocalPlayer.PlayerGui;
 else
 	ParentUI(ScreenGui);
 end
@@ -55,7 +55,7 @@ local ModalScreenGui = Instance.new("ScreenGui");
 ModalScreenGui.DisplayOrder = 999;
 ModalScreenGui.ResetOnSpawn = false;
 if identifyexecutor() == 'Volcano' then
-	ModalScreenGui.Parent = lplr.PlayerGui;
+	ModalScreenGui.Parent = LocalPlayer.PlayerGui;
 else
 	ParentUI(ModalScreenGui);
 end
