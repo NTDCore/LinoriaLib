@@ -45,12 +45,20 @@ local ScreenGui = Instance.new('ScreenGui');
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.DisplayOrder = 999;
 ScreenGui.ResetOnSpawn = false;
-ParentUI(ScreenGui);
+if identifyexecutor() == 'Volcano' then
+	ScreenGui.Parent = lplr.PlayerGui;
+else
+	ParentUI(ScreenGui);
+end
 
 local ModalScreenGui = Instance.new("ScreenGui");
 ModalScreenGui.DisplayOrder = 999;
 ModalScreenGui.ResetOnSpawn = false;
-ParentUI(ModalScreenGui, true);
+if identifyexecutor() == 'Volcano' then
+	ModalScreenGui.Parent = lplr.PlayerGui;
+else
+	ParentUI(ModalScreenGui);
+end
 
 local ModalElement = Instance.new("TextButton");
 ModalElement.BackgroundTransparency = 1
