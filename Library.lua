@@ -45,8 +45,6 @@ local ScreenGui = Instance.new('ScreenGui');
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.DisplayOrder = 999;
 ScreenGui.ResetOnSpawn = false;
-ScreenGui.IgnoreGuiInset = true;
-ScreenGui.OnTopOfCoreBlur = true;
 if identifyexecutor() == 'Volcano' or identifyexecutor() == 'Potassium' then
 	ScreenGui.Parent = LocalPlayer.PlayerGui;
 else
@@ -56,8 +54,6 @@ end
 local ModalScreenGui = Instance.new("ScreenGui");
 ModalScreenGui.DisplayOrder = 999;
 ModalScreenGui.ResetOnSpawn = false;
-ModalScreenGui.IgnoreGuiInset = true;
-ModalScreenGui.OnTopOfCoreBlur = true;
 if identifyexecutor() == 'Volcano' or identifyexecutor() == 'Potassium' then
 	ModalScreenGui.Parent = LocalPlayer.PlayerGui;
 else
