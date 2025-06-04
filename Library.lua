@@ -56,6 +56,8 @@ end
 local ModalScreenGui = Instance.new("ScreenGui");
 ModalScreenGui.DisplayOrder = 999;
 ModalScreenGui.ResetOnSpawn = false;
+ModalScreenGui.IgnoreGuiInset = true;
+ModalScreenGui.OnTopOfCoreBlur = true;
 if identifyexecutor() == 'Volcano' or identifyexecutor() == 'Potassium' then
 	ModalScreenGui.Parent = LocalPlayer.PlayerGui;
 else
