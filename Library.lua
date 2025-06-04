@@ -45,7 +45,9 @@ local ScreenGui = Instance.new('ScreenGui');
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.DisplayOrder = 999;
 ScreenGui.ResetOnSpawn = false;
-if table.find({'Volcano', 'Potassium'}, ({identfyexecutor()})[1]) then
+ScreenGui.IgnoreGuiInset = true;
+ScreenGui.OnTopOfCoreBlur = true;
+if identifyexecutor() == 'Volcano' or identifyexecutor() == 'Potassium' then
 	ScreenGui.Parent = LocalPlayer.PlayerGui;
 else
 	ParentUI(ScreenGui);
@@ -54,7 +56,7 @@ end
 local ModalScreenGui = Instance.new("ScreenGui");
 ModalScreenGui.DisplayOrder = 999;
 ModalScreenGui.ResetOnSpawn = false;
-if table.find({'Volcano', 'Potassium'}, ({identfyexecutor()})[1]) then
+if identifyexecutor() == 'Volcano' or identifyexecutor() == 'Potassium' then
 	ModalScreenGui.Parent = LocalPlayer.PlayerGui;
 else
 	ParentUI(ModalScreenGui);
