@@ -2974,7 +2974,7 @@ do
 	end
 
 	function BaseGroupboxFuncs:AddInput(Idx, Info)
-		string.format('AddInput (IDX: %s): Missing `Text` string.', tostring(Idx)));
+		string.format('AddInput (IDX: %s): Missing `Text` string.', tostring(Idx));
 
 		Info.ClearTextOnFocus = if typeof(Info.ClearTextOnFocus) == "boolean" then Info.ClearTextOnFocus else true;
 
