@@ -51,7 +51,9 @@ ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.DisplayOrder = 999;
 ScreenGui.ResetOnSpawn = false;
 if identifyexecutor() == 'Volcano' or identifyexecutor() == 'Potassium' then
-	ScreenGui.Parent = LocalPlayer.PlayerGui;
+	setthreadidentity(8)
+	ParentUI(ScreenGui)
+	--ScreenGui.Parent = LocalPlayer.PlayerGui;
 else
 	ParentUI(ScreenGui);
 end
