@@ -660,8 +660,8 @@ function Library:AddToolTip(InfoStr, DisabledInfoStr, HoverInstance)
 	end))
 	
 	if LibraryMainOuterFrame then
+		ThreadFix()
 		table.insert(TooltipTable.Signals, LibraryMainOuterFrame:GetPropertyChangedSignal("Visible"):Connect(function()
-			ThreadFix()
 			if LibraryMainOuterFrame.Visible == false then
 				IsHovering = false
 				Tooltip.Visible = false
