@@ -46,12 +46,16 @@ local function ParentUI(UI: Instance, SkipHiddenUI: boolean?)
 	SafeParentUI(UI, GetHUI)
 end
 
+local function ThreadFix()
+	if setthreadidentity then
+		setthreadidentity(8)
+	end
+
 local ScreenGui = Instance.new('ScreenGui');
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.DisplayOrder = 999;
 ScreenGui.ResetOnSpawn = false;
 if identifyexecutor() == 'Volcano' or identifyexecutor() == 'Potassium' then
-	setthreadidentity(8)
 	ParentUI(ScreenGui)
 	--ScreenGui.Parent = LocalPlayer.PlayerGui;
 else
@@ -656,6 +660,7 @@ function Library:AddToolTip(InfoStr, DisabledInfoStr, HoverInstance)
 	
 	if LibraryMainOuterFrame then
 		table.insert(TooltipTable.Signals, LibraryMainOuterFrame:GetPropertyChangedSignal("Visible"):Connect(function()
+			ThreadFix()
 			if LibraryMainOuterFrame.Visible == false then
 				IsHovering = false
 				Tooltip.Visible = false
