@@ -5441,6 +5441,7 @@ function Library:CreateWindow(...)
 			function Groupbox:Resize()
 				local Size = 0;
 
+				ThreadFix()
 				for _, Element in next, Groupbox.Container:GetChildren() do
 					if (not Element:IsA('UIListLayout')) and Element.Visible then
 						Size = Size + Element.Size.Y.Offset;
