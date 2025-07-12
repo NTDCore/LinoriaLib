@@ -50,6 +50,7 @@ local function ThreadFix()
 	if setthreadidentity then
 		setthreadidentity(8)
 	end
+end
 
 local ScreenGui = Instance.new('ScreenGui');
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
