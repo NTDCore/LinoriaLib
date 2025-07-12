@@ -3246,6 +3246,7 @@ do
 		local Groupbox = self;
 		local Container = Groupbox.Container;
 
+		ThreadFix()
 		local ToggleOuter = Library:Create('Frame', {
 			BackgroundColor3 = Color3.new(0, 0, 0);
 			BorderColor3 = Color3.new(0, 0, 0);
