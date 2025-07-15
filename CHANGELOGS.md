@@ -1,3 +1,13 @@
+### 14.07.2025
+```diff
++ Added 'AddViewport' and 'AddImage' (thanks upio)
+```
+
+### 22.6.2025
+```diff
++ Added IDX to errors on element creations for easier DEBUG
+```
+
 ### 27.4.2025
 ```diff
 + Fixed an issue where clicking on the UI would click on in-game UI
