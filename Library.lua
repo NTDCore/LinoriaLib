@@ -209,6 +209,8 @@ local function addMaid(t)
 		else
 			table.insert(self.Signals, c)
 		end
+
+		return c
 	end
 end
 

@@ -10,33 +10,33 @@ local assert = function(condition, errorMessage)
 end
 
 if typeof(copyfunction) == "function" then
-    -- Fix is_____ functions for shitsploits, those functions should never error, only return a boolean.
+	-- Fix is_____ functions for shitsploits, those functions should never error, only return a boolean.
 
-    local
-        isfolder_copy,
-        isfile_copy,
-        listfiles_copy = copyfunction(isfolder), copyfunction(isfile), copyfunction(listfiles);
+	local
+		isfolder_copy,
+		isfile_copy,
+		listfiles_copy = copyfunction(isfolder), copyfunction(isfile), copyfunction(listfiles);
 
-    local isfolder_success, isfolder_error = pcall(function()
-        return isfolder_copy("test" .. tostring(math.random(1000000, 9999999)))
-    end);
+	local isfolder_success, isfolder_error = pcall(function()
+		return isfolder_copy("test" .. tostring(math.random(1000000, 9999999)))
+	end);
 
-    if isfolder_success == false or typeof(isfolder_error) ~= "boolean" then
-        isfolder = function(folder)
-            local success, data = pcall(isfolder_copy, folder)
-            return (if success then data else false)
-        end;
+	if isfolder_success == false or typeof(isfolder_error) ~= "boolean" then
+		isfolder = function(folder)
+			local success, data = pcall(isfolder_copy, folder)
+			return (if success then data else false)
+		end;
 
-        isfile = function(file)
-            local success, data = pcall(isfile_copy, file)
-            return (if success then data else false)
-        end;
+		isfile = function(file)
+			local success, data = pcall(isfile_copy, file)
+			return (if success then data else false)
+		end;
 
-        listfiles = function(folder)
-            local success, data = pcall(listfiles_copy, folder)
-            return (if success then data else {})
-        end;
-    end
+		listfiles = function(folder)
+			local success, data = pcall(listfiles_copy, folder)
+			return (if success then data else {})
+		end;
+	end
 end
 
 local ThemeManager = {} do
@@ -53,7 +53,17 @@ local ThemeManager = {} do
 		['Tokyo Night'] 	= { 6, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"191925","AccentColor":"6759b3","BackgroundColor":"16161f","OutlineColor":"323232"}') },
 		['Ubuntu'] 			= { 7, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"3e3e3e","AccentColor":"e2581e","BackgroundColor":"323232","OutlineColor":"191919"}') },
 		['Quartz'] 			= { 8, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"232330","AccentColor":"426e87","BackgroundColor":"1d1b26","OutlineColor":"27232f"}') },
-		['Vape']			= { 9, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1c1c1c","AccentColor":"058568","BackgroundColor":"141414","OutlineColor":"323232"}') },
+		['Nord'] 			= { 9, httpService:JSONDecode('{"FontColor":"eceff4","MainColor":"3b4252","AccentColor":"88c0d0","BackgroundColor":"2e3440","OutlineColor":"4c566a"}') },
+		['Dracula'] 		= { 10, httpService:JSONDecode('{"FontColor":"f8f8f2","MainColor":"44475a","AccentColor":"ff79c6","BackgroundColor":"282a36","OutlineColor":"6272a4"}') },
+		['Monokai']			= { 11, httpService:JSONDecode('{"FontColor":"f8f8f2","MainColor":"272822","AccentColor":"f92672","BackgroundColor":"1e1f1c","OutlineColor":"49483e"}') },
+		['Gruvbox']			= { 12, httpService:JSONDecode('{"FontColor":"ebdbb2","MainColor":"3c3836","AccentColor":"fb4934","BackgroundColor":"282828","OutlineColor":"504945"}') },
+		['Solarized']		= { 13, httpService:JSONDecode('{"FontColor":"839496","MainColor":"073642","AccentColor":"cb4b16","BackgroundColor":"002b36","OutlineColor":"586e75"}') },
+		['Catppuccin']		= { 14, httpService:JSONDecode('{"FontColor":"d9e0ee","MainColor":"302d41","AccentColor":"f5c2e7","BackgroundColor":"1e1e2e","OutlineColor":"575268"}') },
+		['One Dark']		= { 15, httpService:JSONDecode('{"FontColor":"abb2bf","MainColor":"282c34","AccentColor":"c678dd","BackgroundColor":"21252b","OutlineColor":"5c6370"}') },
+		['Cyberpunk']		= { 16, httpService:JSONDecode('{"FontColor":"f9f9f9","MainColor":"262335","AccentColor":"00ff9f","BackgroundColor":"1a1a2e","OutlineColor":"413c5e"}') },
+		['Oceanic Next']	= { 17, httpService:JSONDecode('{"FontColor":"d8dee9","MainColor":"1b2b34","AccentColor":"6699cc","BackgroundColor":"16232a","OutlineColor":"343d46"}') },
+		['Material']		= { 18, httpService:JSONDecode('{"FontColor":"eeffff","MainColor":"212121","AccentColor":"82aaff","BackgroundColor":"151515","OutlineColor":"424242"}') },
+		['Vape']			= { 19, httpService:JSONDecode('{"FontColor":"ffffff","MainColor":"1c1c1c","AccentColor":"058568","BackgroundColor":"141414","OutlineColor":"323232"}') },
 	}
 
 	function ApplyBackgroundVideo(videoLink)
@@ -99,7 +109,7 @@ local ThemeManager = {} do
 
 	--// Folders \\--
 	function ThemeManager:GetPaths()
-	    local paths = {}
+		local paths = {}
 
 		local parts = self.Folder:split('/')
 		for idx = 1, #parts do
