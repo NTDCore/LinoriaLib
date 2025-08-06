@@ -194,24 +194,24 @@ end;
 local function addMaid(t)
     t.Signals = {}
 
-	function t:GiveSignal(c)
-		if typeof(c) == 'Instance' then
-			table.insert(self.Signals, {
-				Disconnect = function()
-					c:ClearAllChildren()
-					c:Destroy()
-				end
-			})
-		elseif type(c) == 'function' then
-			table.insert(self.Signals, {
-				Disconnect = c
-			})
-		else
-			table.insert(self.Signals, c)
-		end
+    function t:GiveSignal(c)
+        if typeof(c) == 'Instance' then
+            table.insert(self.Signals, {
+                Disconnect = function()
+                    c:ClearAllChildren()
+                    c:Destroy()
+                end
+            })
+        elseif type(c) == 'function' then
+            table.insert(self.Signals, {
+                Disconnect = c
+            })
+        else
+            table.insert(self.Signals, c)
+        end
 
-		return c
-	end
+        return c
+    end
 end
 
 local function GetPlayers(ExcludeLocalPlayer, ReturnInstances)
