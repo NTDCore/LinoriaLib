@@ -5711,7 +5711,8 @@ function Library:CreateWindow(...)
         local TopBarLabelStroke
         local TopBarHighlight
         local IsTopBarBottom = false
-        local TopBar, TopBarInner, TopBarLabel, TopBarTextLabel; do
+        local LockBoxSize = false
+        local TopBar, TopBarInner, TopBarLabel, TopBarTextLabel, TopBarScrollingFrame; do
             TopBar = Library:Create('Frame', {
                 BackgroundColor3 = Library.BackgroundColor;
                 BorderColor3 = Color3.fromRGB(248, 51, 51);
@@ -5741,10 +5742,22 @@ function Library:CreateWindow(...)
                 Parent = TopBarInner;
             });
 
+            TopBarScrollingFrame = Library:Create('ScrollingFrame', {
+                BackgroundTransparency = 1;
+                BorderSizePixel = 0;
+                Size = UDim2.new(1, 0, 1, -9);
+                CanvasSize = UDim2.new(0, 0, 0, 0);
+                AutomaticCanvasSize = Enum.AutomaticSize.Y;
+                ScrollBarThickness = 3;
+                ZIndex = 5;
+                Parent = TopBarInner;
+            });
+
             TopBarLabel = Library:Create('TextLabel', {
                 BackgroundTransparency = 1;
                 Font = Library.Font;
                 TextStrokeTransparency = 0;
+                RichText = true;
 
                 Size = UDim2.new(1, 0, 0, 18);
                 Position = UDim2.new(0, 4, 0, 2);
@@ -5753,14 +5766,15 @@ function Library:CreateWindow(...)
                 TextXAlignment = Enum.TextXAlignment.Left;
                 TextColor3 = Color3.fromRGB(255, 55, 55);
                 ZIndex = 5;
-                Parent = TopBarInner;
+                Parent = TopBarScrollingFrame;
             });
 
             TopBarLabelStroke = Library:ApplyTextStroke(TopBarLabel);
             TopBarLabelStroke.Color = Color3.fromRGB(174, 3, 3);
 
             TopBarTextLabel = Library:CreateLabel({
-                Position =  UDim2.new(0, 4, 0, 20);
+                RichText = true;
+                Position = UDim2.new(0, 4, 0, 20);
                 Size = UDim2.new(1, -4, 0, 14);
                 TextSize = 14;
                 Text = "Text";
@@ -5768,7 +5782,7 @@ function Library:CreateWindow(...)
                 TextXAlignment = Enum.TextXAlignment.Left;
                 TextYAlignment = Enum.TextYAlignment.Top;
                 ZIndex = 5;
-                Parent = TopBarInner;
+                Parent = TopBarScrollingFrame;
             });
             
             Library:Create('Frame', {
@@ -5862,8 +5876,9 @@ function Library:CreateWindow(...)
         function Tab:Resize()
             if TopBar.Visible == true then
                 local Size = 5;
+                local MaximumSize = math.floor(TabFrame.AbsoluteSize.Y / 3.25);
 
-                for _, Element in next, TopBarInner:GetChildren() do
+                for _, Element in next, TopBarScrollingFrame:GetChildren() do
                     if (not Element:IsA('UIListLayout')) and Element.Visible then
                         if Element == TopBarTextLabel then
                             Size = Size + Element.TextBounds.Y;    
@@ -5873,7 +5888,9 @@ function Library:CreateWindow(...)
                         Size = Size + Element.Size.Y.Offset;
                     end;
                 end;
-                
+
+                if LockBoxSize == true and Size >= MaximumSize then Size = MaximumSize; end
+
                 if IsTopBarBottom == true then
                     TopBar.Position = UDim2.new(0, 7, 1, -(Size + 7));
                 else
@@ -5906,11 +5923,13 @@ function Library:CreateWindow(...)
         end;
 
         function Tab:UpdateWarningBox(Info)
-            if Info.Bottom == true then
-                IsTopBarBottom = true;
+            if typeof(Info.Bottom) == "boolean" then
+                IsTopBarBottom = Info.Bottom;
                 if TopBar.Visible then Tab:Resize(); end
-            else
-                IsTopBarBottom = false;
+            end
+
+            if typeof(Info.LockSize) == "boolean" then
+                LockBoxSize = Info.LockSize;
                 if TopBar.Visible then Tab:Resize(); end
             end
 
@@ -5966,6 +5985,7 @@ function Library:CreateWindow(...)
 
             Tab:Resize();
         end;
+        Tab.Show = Tab.ShowTab;
 
         function Tab:HideTab()
             Blocker.BackgroundTransparency = 1;
@@ -5973,6 +5993,7 @@ function Library:CreateWindow(...)
             Library.RegistryMap[TabButton].Properties.BackgroundColor3 = 'BackgroundColor';
             TabFrame.Visible = false;
         end;
+        Tab.Hide = Tab.HideTab;
 
         function Tab:SetLayoutOrder(Position)
             TabButton.LayoutOrder = Position;
