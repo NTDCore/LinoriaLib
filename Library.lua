@@ -1538,7 +1538,7 @@ do
         local KeyPicker = {
             Value = nil;
             Toggled = false;
-            Mode = 'Toggle'; -- Always, Toggle, Hold
+            Mode = Info.Mode or 'Toggle'; -- Always, Toggle, Hold, Press
             Type = 'KeyPicker';
             Callback = Info.Callback or function(Value) end;
             ChangedCallback = Info.ChangedCallback or function(New) end;
@@ -1556,6 +1556,14 @@ do
             [Enum.UserInputType.MouseButton2] = "MB2",
             [Enum.UserInputType.MouseButton3] = "MB3"
         }
+
+        if KeyPicker.Mode == "Press" then
+            assert(ParentObj.Type == "Label", "KeyPicker with the mode 'Press' can be only applied on Labels.")
+            
+            KeyPicker.SyncToggleState = false
+            Info.Modes = { "Press" }
+            Info.Mode = "Press"
+        end
 
         if KeyPicker.SyncToggleState then
             Info.Modes = { 'Toggle' }
@@ -1944,12 +1952,24 @@ do
         end
 
         function KeyPicker:DoClick()
+            if KeyPicker.Mode == "Press" then
+                if KeyPicker.Toggled and Info.WaitForCallback == true then
+                    return
+                end
+
+                KeyPicker.Toggled = true
+            end
+
             if ParentObj.Type == 'Toggle' and KeyPicker.SyncToggleState then
                 ParentObj:SetValue(not ParentObj.Value)
             end
 
             Library:SafeCallback(KeyPicker.Callback, KeyPicker.Toggled)
             Library:SafeCallback(KeyPicker.Clicked, KeyPicker.Toggled)
+
+            if KeyPicker.Mode == "Press" then
+                KeyPicker.Toggled = false
+            end
         end
 
         function KeyPicker:SetModePickerVisibility(bool)
@@ -1997,9 +2017,10 @@ do
                     end
 
                     Break = true;
-                    Picking = false;
-                    
                     KeyPicker:SetValue({ Key, KeyPicker.Mode })
+
+                    task.wait();
+                    Picking = false;
                 end);
 
             elseif Input.UserInputType == Enum.UserInputType.MouseButton2 and not Library:MouseIsOverOpenedFrame() then
@@ -2021,16 +2042,24 @@ do
             if KeyPicker.Value == "Unknown" then return end
         
             if (not Picking) and (not InputService:GetFocusedTextBox()) then
-                if KeyPicker.Mode == 'Toggle' then
-                    local Key = KeyPicker.Value;
+                local Key = KeyPicker.Value;
+                local HoldingKey = false;
 
-                    if Input.UserInputType == Enum.UserInputType.Keyboard then
-                        if Input.KeyCode.Name == Key then
-                            KeyPicker.Toggled = not KeyPicker.Toggled;
-                            KeyPicker:DoClick()
-                        end;
-                    elseif SpecialKeysInput[Input.UserInputType] == Key then
+                if Input.UserInputType == Enum.UserInputType.Keyboard then
+                    if Input.KeyCode.Name == Key then
+                        HoldingKey = true;
+                    end;
+                elseif SpecialKeysInput[Input.UserInputType] == Key then
+                    HoldingKey = true;
+                end;
+
+                if KeyPicker.Mode == 'Toggle' then
+                    if HoldingKey then
                         KeyPicker.Toggled = not KeyPicker.Toggled;
+                        KeyPicker:DoClick();
+                    end;
+                elseif KeyPicker.Mode == "Press" then
+                    if HoldingKey then
                         KeyPicker:DoClick();
                     end;
                 end;
@@ -2761,7 +2790,7 @@ do
         Data.OriginalText = Data.Text;
         
         local Label = {
-
+            Type = "Label"
         };
 
         local Blank = nil;
@@ -3746,17 +3775,26 @@ do
         end;
         
         function Slider:Display()
-            local FormattedValue = (Slider.Value == 0 or Slider.Value == -0) and "0" or tostring(Slider.Value);
-            if Info.Compact then
-                DisplayLabel.Text = string.format("%s: %s%s%s", Slider.Text, Slider.Prefix, FormattedValue, Slider.Suffix);
+            local CustomDisplayText = nil;
+            if Info.FormatDisplayValue then
+                CustomDisplayText = Info.FormatDisplayValue(Slider, Slider.Value);
+            end;
 
-            elseif Info.HideMax then
-                DisplayLabel.Text = string.format("%s%s%s", Slider.Prefix, FormattedValue, Slider.Suffix);
-
+            if CustomDisplayText then
+                DisplayLabel.Text = tostring(CustomDisplayText);
             else
-                DisplayLabel.Text = string.format("%s%s%s/%s%s%s", 
-                    Slider.Prefix, FormattedValue, Slider.Suffix,
-                    Slider.Prefix, tostring(Slider.Max), Slider.Suffix);
+                local FormattedValue = (Slider.Value == 0 or Slider.Value == -0) and "0" or tostring(Slider.Value);
+                if Info.Compact then
+                    DisplayLabel.Text = string.format("%s: %s%s%s", Slider.Text, Slider.Prefix, FormattedValue, Slider.Suffix);
+
+                elseif Info.HideMax then
+                    DisplayLabel.Text = string.format("%s%s%s", Slider.Prefix, FormattedValue, Slider.Suffix);
+
+                else
+                    DisplayLabel.Text = string.format("%s%s%s/%s%s%s", 
+                        Slider.Prefix, FormattedValue, Slider.Suffix,
+                        Slider.Prefix, tostring(Slider.Max), Slider.Suffix);
+                end;
             end;
 
             local X = Library:MapValue(Slider.Value, Slider.Min, Slider.Max, 0, 1);
