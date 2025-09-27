@@ -61,24 +61,20 @@ local function ThreadFix()
     end
 end
 
-local ScreenGui = Instance.new('ScreenGui');
+local ScreenGui = Instance.new("ScreenGui");
 ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Global;
 ScreenGui.DisplayOrder = 999;
 ScreenGui.ResetOnSpawn = false;
 ParentUI(ScreenGui);
 
-local ModalScreenGui = Instance.new("ScreenGui");
-ModalScreenGui.DisplayOrder = 999;
-ModalScreenGui.ResetOnSpawn = false;
-ParentUI(ModalScreenGui);
-
 local ModalElement = Instance.new("TextButton");
-ModalElement.BackgroundTransparency = 1
-ModalElement.Modal = false
-ModalElement.Size = UDim2.fromScale(0, 0)
-ModalElement.Text = ""
-ModalElement.ZIndex = -999
-ModalElement.Parent = ModalScreenGui
+ModalElement.BackgroundTransparency = 1;
+ModalElement.Modal = false;
+ModalElement.Size = UDim2.fromScale(0, 0);
+ModalElement.AnchorPoint = Vector2.zero;
+ModalElement.Text = "";
+ModalElement.ZIndex = -999;
+ModalElement.Parent = ScreenGui;
 
 local LibraryMainOuterFrame = nil;
 
@@ -862,8 +858,9 @@ function Library:Unload()
         end
     end
 
-    getgenv().Linoria = nil
     ScreenGui:Destroy()
+    Library.Unloaded = true
+    getgenv().Linoria = nil
 end
 
 function Library:OnUnload(Callback)
