@@ -835,22 +835,8 @@ function Library:UpdateColorsUsingRegistry()
 end;
 
 function Library:GiveSignal(Signal)
-    if typeof(c) == 'Instance' then
-        table.insert(self.Signals, {
-            Disconnect = function()
-                c:ClearAllChildren()
-                c:Destroy()
-            end
-        })
-    elseif type(c) == 'function' then
-        table.insert(self.Signals, {
-            Disconnect = c
-        })
-    else
-        table.insert(self.Signals, c)
-    end
-
-    return c
+    -- Only used for signals not attached to library instances, as those should be cleaned up on object destruction by Roblox
+    table.insert(Library.Signals, Signal)
 end
 
 function Library:Unload()
