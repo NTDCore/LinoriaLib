@@ -5876,15 +5876,6 @@ do
         SortOrder = Enum.SortOrder.LayoutOrder;
         Parent = Library.RightNotificationArea;
     });
-
-    function Library:SetFont(FontFace)
-        if typeof(FontFace) == 'EnumItem' then
-            FontFace = Font.fromEnum(FontFace)
-        end
-
-        Library.Font = FontFace
-        Library:UpdateColorsUsingRegistry()
-    end
         
     function Library:SetNotifySide(Side: string)
         Library.NotifySide = Side;
