@@ -166,10 +166,10 @@ local ThemeManager = {} do
 				
 				ApplyBackgroundVideo(col)
 			elseif idx == 'FontFace' then
-				self.Library:SetFont(Enum.Font[val])
+				self.Library:SetFont(Enum.Font[col])
 
 				if self.Library.Options[idx] then
-					self.Library.Options[idx]:SetValue(val)
+					self.Library.Options[idx]:SetValue(col)
 				end
 			else
 				if tonumber(col) then
