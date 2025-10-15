@@ -172,12 +172,12 @@ local ThemeManager = {} do
 					self.Library.Options[idx]:SetValue(col)
 				end
 			else
-				if tonumber(col) then
-					self.Library[idx] = Color3.fromHex(col)
-
-					if self.Library.Options[idx] then
-						self.Library.Options[idx]:SetValueRGB(Color3.fromHex(col))
-					end
+				print(col)
+				warn(typeof(col))
+				self.Library[idx] = Color3.fromHex(col)
+				
+				if self.Library.Options[idx] then
+					self.Library.Options[idx]:SetValueRGB(Color3.fromHex(col))
 				end
 			end
 		end
