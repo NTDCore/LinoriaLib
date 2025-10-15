@@ -166,6 +166,7 @@ local ThemeManager = {} do
 				
 				ApplyBackgroundVideo(col)
 			else
+				print(idx, col)
 				if tonumber(col) then
 					self.Library[idx] = Color3.fromHex(col)
 
