@@ -165,6 +165,12 @@ local ThemeManager = {} do
 				end
 				
 				ApplyBackgroundVideo(col)
+			elseif idx == 'FontFace' then
+				self.Library:SetFont(Enum.Font[val])
+
+				if self.Library.Options[idx] then
+					self.Library.Options[idx]:SetValue(val)
+				end
 			else
 				if tonumber(col) then
 					self.Library[idx] = Color3.fromHex(col)
@@ -259,6 +265,7 @@ local ThemeManager = {} do
 				theme[field] = self.Library.Options[field].Value:ToHex()
 			end
 		end
+		theme["FontFace"] = self.Library.Options["FontFace"].Value
 
 		writefile(self.Folder .. '/themes/' .. file .. '.json', httpService:JSONEncode(theme))
 	end
@@ -312,6 +319,11 @@ local ThemeManager = {} do
 		groupbox:AddLabel('Outline color'):AddColorPicker('OutlineColor', { Default = self.Library.OutlineColor });
 		groupbox:AddLabel('Font color')	:AddColorPicker('FontColor', { Default = self.Library.FontColor });
 		groupbox:AddInput('VideoLink', { Text = '.webm Video Background (Link)', Default = self.Library.VideoLink });
+		groupbox:AddDropdown("FontFace", {
+            Text = "Font Face",
+            Default = "Code",
+            Values = { "BuilderSans", "Code", "Fantasy", "Gotham", "Jura", "Roboto", "RobotoMono", "SourceSans", "Arial" },
+        });
 		
 		local ThemesArray = {}
 		for Name, Theme in next, self.BuiltInThemes do
@@ -398,6 +410,10 @@ local ThemeManager = {} do
 		self.Library.Options.AccentColor:OnChanged(UpdateTheme)
 		self.Library.Options.OutlineColor:OnChanged(UpdateTheme)
 		self.Library.Options.FontColor:OnChanged(UpdateTheme)
+		self.Library.Options.FontFace:OnChanged(function(Value)
+			self.Library:SetFont(Enum.Font[Value])
+			self.Library:UpdateColorsUsingRegistry()
+		end)
 	end
 
 	function ThemeManager:CreateGroupBox(tab)
