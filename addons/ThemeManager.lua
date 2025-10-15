@@ -166,12 +166,12 @@ local ThemeManager = {} do
 				
 				ApplyBackgroundVideo(col)
 			else
-				print(col)
-				warn(typeof(col))
-				self.Library[idx] = Color3.fromHex(col)
-				
-				if self.Library.Options[idx] then
-					self.Library.Options[idx]:SetValueRGB(Color3.fromHex(col))
+				if tonumber(col) then
+					self.Library[idx] = Color3.fromHex(col)
+
+					if self.Library.Options[idx] then
+						self.Library.Options[idx]:SetValueRGB(Color3.fromHex(col))
+					end
 				end
 			end
 		end
