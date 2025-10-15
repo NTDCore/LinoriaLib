@@ -166,6 +166,8 @@ local ThemeManager = {} do
 				
 				ApplyBackgroundVideo(col)
 			else
+				print(col)
+				warn(typeof(col))
 				self.Library[idx] = Color3.fromHex(col)
 				
 				if self.Library.Options[idx] then
