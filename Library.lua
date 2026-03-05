@@ -349,6 +349,12 @@ local function addMaid(t)
             table.insert(self.Signals, {
                 Disconnect = c
             })
+        elseif type(c) == 'thread' then
+            table.insert(self.Signals, {
+                Disconnect = function()
+                    task.cancel(c)
+                end
+            })
         else
             table.insert(self.Signals, c)
         end
