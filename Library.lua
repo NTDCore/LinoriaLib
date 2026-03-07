@@ -6232,7 +6232,7 @@ do
     Library:MakeDraggable(KeybindOuter)
 end
 
---// Watermark \\--
+--// Watermark - Deprecated \\--
 do
     local WatermarkOuter = Library:Create("Frame", {
         BorderColor3 = Color3.new(0, 0, 0);
