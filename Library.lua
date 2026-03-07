@@ -6232,27 +6232,29 @@ do
     Library:MakeDraggable(KeybindOuter)
 end
 
---// Watermark - Deprecated \\--
-do
-    local WatermarkOuter = Library:Create("Frame", {
+--// Deprecated \\--
+function Library:AddDraggableLabel(Text: string)
+    local Table = {}
+
+    local Outer = Library:Create("Frame", {
         BorderColor3 = Color3.new(0, 0, 0);
         Position = UDim2.new(0, 100, 0, -25);
         Size = UDim2.new(0, 213, 0, 20);
         ZIndex = 200;
-        Visible = false;
+        Visible = true;
         Parent = ScreenGui;
     })
 
-    local WatermarkInner = Library:Create("Frame", {
+    local Inner = Library:Create("Frame", {
         BackgroundColor3 = Library.MainColor;
         BorderColor3 = Library.AccentColor;
         BorderMode = Enum.BorderMode.Inset;
         Size = UDim2.new(1, 0, 1, 0);
         ZIndex = 201;
-        Parent = WatermarkOuter;
+        Parent = Outer;
     })
 
-    Library:AddToRegistry(WatermarkInner, {
+    Library:AddToRegistry(Inner, {
         BorderColor3 = "AccentColor";
     })
 
@@ -6262,7 +6264,7 @@ do
         Position = UDim2.new(0, 1, 0, 1);
         Size = UDim2.new(1, -2, 1, -2);
         ZIndex = 202;
-        Parent = WatermarkInner;
+        Parent = Inner;
     })
 
     local Gradient = Library:Create("UIGradient", {
@@ -6283,29 +6285,44 @@ do
         end
     })
 
-    local WatermarkLabel = Library:CreateLabel({
+    local Label = Library:CreateLabel({
         Position = UDim2.new(0, 5, 0, 0);
         Size = UDim2.new(1, -4, 1, 0);
         TextSize = 14;
         TextXAlignment = Enum.TextXAlignment.Left;
         ZIndex = 203;
+        Text = Text;
         Parent = InnerFrame;
     })
 
-    Library.Watermark = WatermarkOuter
-    Library.WatermarkText = WatermarkLabel
-    Library:MakeDraggable(Library.Watermark)
+    Library:MakeDraggable(Outer)
 
-    function Library:SetWatermarkVisibility(Bool)
-        Library.Watermark.Visible = Bool
+    Table.Label = Label
+
+    function Table:SetText(Text: string)
+        local X, Y = Library:GetTextBounds(Text, Library.Font, 14)
+        Label.Size = UDim2.new(0, X + 15, 0, (Y * 1.5) + 3)
+        Label.Text = Text
     end
 
-    function Library:SetWatermark(Text)
-        local X, Y = Library:GetTextBounds(Text, Library.Font, 14)
-        Library.Watermark.Size = UDim2.new(0, X + 15, 0, (Y * 1.5) + 3)
-        Library:SetWatermarkVisibility(true)
+    function Table:SetVisible(Visible: boolean)
+        Label.Visible = Visible
+    end
 
-        Library.WatermarkText.Text = Text
+    return Table
+end
+
+--// Watermark - Deprecated \\--
+do
+    Library.Watermark = Library:AddDraggableLabel('')
+    Library.WatermarkText = Library.Watermark.Label
+
+    function Library:SetWatermarkVisibility(Bool)
+        Library.Watermark:SetVisible(Bool)
+    end
+
+    function Library:SetWatermark(Text: string)
+        Library.Watermark:SetText(text)
     end
 end
 
