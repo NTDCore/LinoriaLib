@@ -6316,6 +6316,7 @@ end
 do
     Library.Watermark = Library:AddDraggableLabel('')
     Library.WatermarkText = Library.Watermark.Label
+    Library.Watermark:SetVisible(false)
 
     function Library:SetWatermarkVisibility(Bool)
         Library.Watermark:SetVisible(Bool)
