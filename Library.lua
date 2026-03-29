@@ -2644,6 +2644,7 @@ do
 
         Info.Searchable = if typeof(Info.Searchable) == "boolean" then Info.Searchable else false
         Info.FormatDisplayValue = if typeof(Info.FormatDisplayValue) == "function" then Info.FormatDisplayValue else nil
+        Info.FormatListValue = if typeof(Info.FormatListValue) == "function" then Info.FormatListValue else nil
 
         local Dropdown = {
             Values = Info.Values;
@@ -2859,10 +2860,8 @@ do
 
             if Info.Multi and typeof(SelectedValue) == "table" then
                 for Idx, Value in next, Dropdown.Values do
-                    local StringValue = if typeof(Value) == "Instance" then Value.Name else Value
-
                     if SelectedValue[Value] then
-                        Str = Str .. (Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(StringValue)) or StringValue) .. ", "
+                        Str = Str .. tostring(Info.FormatDisplayValue and Info.FormatDisplayValue(Value) or Value) .. ", "
                     end
                 end
 
@@ -2873,8 +2872,7 @@ do
                     return "--"
                 end
 
-                local StringValue = if typeof(SelectedValue) == "Instance" then SelectedValue.Name else tostring(SelectedValue)
-                Str = Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(StringValue)) or StringValue
+                Str = tostring(Info.FormatDisplayValue and Info.FormatDisplayValue(SelectedValue) or SelectedValue)
             end
 
             return Str
@@ -2917,7 +2915,7 @@ do
             OpenedXSizeForList = DropdownOuter.AbsoluteSize.X + 0.5
 
             for Idx, Value in next, Values do
-                local StringValue = if typeof(Value) == "Instance" then Value.Name else Value
+                local StringValue = tostring(Info.FormatListValue and Info.FormatListValue(Value) or Value)
                 if Info.Searchable and not string.lower(StringValue):match(string.lower(DropdownInnerSearch.Text)) then
                     continue
                 end
@@ -3091,8 +3089,9 @@ do
             Dropdown.Visible = Visibility
 
             DropdownOuter.Visible = Dropdown.Visible
-            if not Dropdown.Visible then Dropdown:CloseDropdown()
-end
+            if not Dropdown.Visible then 
+                Dropdown:CloseDropdown()
+            end
         end
 
         function Dropdown:SetDisabled(Disabled)
@@ -4647,6 +4646,7 @@ do
         
         Info.Searchable = if typeof(Info.Searchable) == "boolean" then Info.Searchable else false
         Info.FormatDisplayValue = if typeof(Info.FormatDisplayValue) == "function" then Info.FormatDisplayValue else nil
+        Info.FormatListValue = if typeof(Info.FormatListValue) == "function" then Info.FormatListValue else nil
 
         if (not Info.Text) then
             Info.Compact = true
@@ -4885,10 +4885,8 @@ do
 
             if Info.Multi then
                 for Idx, Value in next, Values do
-                    local StringValue = if typeof(Value) == "Instance" then Value.Name else Value
-
                     if Dropdown.Value[Value] then
-                        Str = Str .. (Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(StringValue)) or StringValue) .. ", "
+                        Str = Str .. tostring(Info.FormatDisplayValue and Info.FormatDisplayValue(Value) or Value) .. ", "
                     end
                 end
 
@@ -4900,8 +4898,7 @@ do
                     return
                 end
 
-                local StringValue = if typeof(Dropdown.Value) == "Instance" then Dropdown.Value.Name else Dropdown.Value
-                ItemList.Text = Info.FormatDisplayValue and tostring(Info.FormatDisplayValue(StringValue)) or StringValue
+                ItemList.Text = tostring(Info.FormatDisplayValue and Info.FormatDisplayValue(Dropdown.Value) or Dropdown.Value)
             end
         end
 
@@ -4932,7 +4929,7 @@ do
 
             local Count = 0
             for Idx, Value in next, Values do
-                local StringValue = if typeof(Value) == "Instance" then Value.Name else Value
+                local StringValue = tostring(Info.FormatListValue and Info.FormatListValue(Value) or Value)
                 if Info.Searchable and not string.lower(StringValue):match(string.lower(DropdownInnerSearch.Text)) then
                     continue
                 end
