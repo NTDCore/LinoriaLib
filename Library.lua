@@ -6778,7 +6778,7 @@ function Library:CreateWindow(...)
         BorderColor3 = "OutlineColor";
     })
 
-    function Window:SetWindowTitle(Title)
+    function Window:ChangeTitle(Title)
         if typeof(Title) == "string" then
             Window.Title = Title
             WindowLabel.Text = Window.Title
