@@ -2440,7 +2440,7 @@ do
         end
 
         if ParentObj.Addons then
-            table.insert(ParentObj.Addons, ColorPicker)
+           ParentObj.Addons[Idx] = ColorPicker
         end
 
         function ColorPicker:Show()
@@ -2616,7 +2616,7 @@ do
         ColorPicker:Display()
         ColorPicker.DisplayFrame = DisplayFrame
 
-        ColorPicker.Default = ColorPicker.Value
+        ColorPicker.Value = ColorPicker.Default
 
         Options[Idx] = ColorPicker
 
@@ -4176,9 +4176,7 @@ do
                 return
             end
 
-            Bool = (not not Bool)
-
-            Toggle.Value = Bool
+            Toggle.Value = Bool or not Toggle.Value
             Toggle:Display()
 
             for _, Addon in next, Toggle.Addons do
@@ -4202,6 +4200,10 @@ do
 
             Library:UpdateDependencyBoxes()
             Library:UpdateDependencyGroupboxes()
+        end
+
+        function Toggle:Toggle()
+            Toggle:SetValue()
         end
 
         function Toggle:SetVisible(Visibility)
