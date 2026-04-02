@@ -337,7 +337,7 @@ end
 local function addMaid(t)
     t.Signals = {}
 
-    function t:GiveSignal(c)
+    function t:GiveSignal(c: RBXScriptConnection)
         if typeof(c) == 'Instance' then
             table.insert(self.Signals, {
                 Disconnect = function()
@@ -1977,10 +1977,8 @@ do
         local ToggleLabel = self.TextLabel
         --local Container = self.Container;
 
-        assert(Info.Default, string.format("AddColorPicker (IDX: %s): Missing default value.", tostring(Idx)))
-
         local ColorPicker = {
-            Value = Info.Default;
+            Value = Info.Default or Color3.new(1, 1, 1);
 
             Transparency = Info.Transparency or 0;
             Type = "ColorPicker";
@@ -1988,6 +1986,8 @@ do
             Callback = Info.Callback or function(Color) end;
             Changed = nil,
         }
+
+        ColorPicker.Value = Info.Default
 
         local PreviousValues = {
             Value = nil,
