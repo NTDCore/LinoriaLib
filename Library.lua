@@ -1987,8 +1987,6 @@ do
             Changed = nil,
         }
 
-        ColorPicker.Value = Info.Default
-
         local PreviousValues = {
             Value = nil,
             Transparency = nil
@@ -2615,8 +2613,6 @@ do
 
         ColorPicker:Display()
         ColorPicker.DisplayFrame = DisplayFrame
-
-        ColorPicker.Value = ColorPicker.Default
 
         Options[Idx] = ColorPicker
 
