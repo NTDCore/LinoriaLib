@@ -4027,6 +4027,7 @@ do
         assert(Info.Text, string.format("AddInput (IDX: %s): Missing `Text` string.", tostring(Idx)))
 
         local Toggle = {
+            Index = Idx,
             Value = Info.Default or false;
             Type = "Toggle";
             Visible = if typeof(Info.Visible) == "boolean" then Info.Visible else true;
