@@ -4024,7 +4024,7 @@ do
     end
 
     function BaseGroupboxFuncs:AddToggle(Idx, Info)
-        assert(Info.Text, string.format("AddInput (IDX: %s): Missing `Text` string.", tostring(Idx)))
+        assert(Info.Text, string.format("AddToggle (IDX: %s): Missing `Text` string.", tostring(Idx)))
 
         local Toggle = {
             Index = Idx,
